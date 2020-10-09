@@ -16,9 +16,16 @@ class Tab2Page extends StatelessWidget {
           body: Column(
             children: [
               _CategoriesList(),
-              Expanded(
-                child: NewsList(newsService.articlesByCategorySelected),
-              )
+
+              if ( !newsService.isLoading )
+                Expanded(
+                  child: NewsList( newsService.articlesByCategorySelected )
+                ),
+
+              if ( newsService.isLoading )
+                Expanded(
+                  child: Center( child: CircularProgressIndicator() )
+                )
             ],
         ),
       ),
@@ -32,10 +39,11 @@ class _CategoriesList extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final categories = Provider.of<NewsService>(context).categories;
+    final newsService = Provider.of<NewsService>(context);
 
     return Container(
       width: double.infinity,
-      height: 80,
+      height: 100,
       margin: EdgeInsets.only(top: 30),
       child: ListView.builder(
         physics: BouncingScrollPhysics(),
@@ -44,12 +52,19 @@ class _CategoriesList extends StatelessWidget {
         itemBuilder: (BuildContext context, int i) {
           final categoryName = categories[i].categoryName;
           return Padding(
-            padding: EdgeInsets.all(8),
+            padding: EdgeInsets.all(12),
             child: Column(
               children: [
                 _CategoryIcon(categories[i]),
-                SizedBox(height: 5),
-                Text('${categoryName[0].toUpperCase()}${categoryName.substring(1)}'),
+                SizedBox(height: 7),
+                Text(
+                  '${categoryName[0].toUpperCase()}${categoryName.substring(1)}',
+                  style: TextStyle(
+                    color: (newsService.selectedCategory == categoryName)
+                      ? darkTheme.accentColor
+                      : Colors.white,
+                  ),
+                ),
               ],
             ),
           );

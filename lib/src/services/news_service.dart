@@ -28,12 +28,15 @@ class NewsService with ChangeNotifier {
   Map<String, List<Article>> categoryArticles = {};
   // {'business': List<Article>}
 
+  bool _isLoading = true;
+
   NewsService() {
     this.getTopHeadlines();
     // Inicializamos nuestro objeto de categorias, ayudandonos de nuestra lista de categorias
     categories.forEach((item) {
       this.categoryArticles[item.categoryName] = new List();
     });
+    this.getArticlesByCategory(this._selectedCategory);
   }
 
   // HEADLINES
@@ -51,6 +54,7 @@ class NewsService with ChangeNotifier {
   // CATEGORIES
   get selectedCategory => this._selectedCategory;
   set selectedCategory(String value){
+    this._isLoading = true;
     this._selectedCategory = value;
     this.getArticlesByCategory(value);
     notifyListeners();
@@ -60,6 +64,7 @@ class NewsService with ChangeNotifier {
 
     if ( this.categoryArticles[category].length > 0 ) {
       // Si ya tenemos data cargada
+      this._isLoading = false;
       return this.categoryArticles[category];
     }
 
@@ -71,9 +76,13 @@ class NewsService with ChangeNotifier {
 
     this.categoryArticles[category].addAll(newsResponse.articles);
 
+    this._isLoading = false;
     notifyListeners();
   }
 
   // Para obtener la lista con la data de Article spor categoria
   List<Article> get articlesByCategorySelected => this.categoryArticles[this.selectedCategory];
+
+  bool get isLoading => this._isLoading;
+
 }
