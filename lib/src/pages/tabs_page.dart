@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:provider_news_app/src/pages/tab1_page.dart';
+import 'package:provider_news_app/src/pages/tab2_page.dart';
 
 class TabsPage extends StatelessWidget {
 
@@ -11,14 +13,14 @@ class TabsPage extends StatelessWidget {
       // Mediante el create, creamos una instancia global de nuestra clase _NavegacionModel, para asi mantener esta instancia global
       create: (_) => new _NavegacionModel(),
       child: Scaffold(
-      body: _Pages(),
-      bottomNavigationBar: _Navigation(),
+        body: _Pages(),
+        bottomNavigationBar: _NavigationBar(),
       ),
     );
   }
 }
 
-class _Navigation extends StatelessWidget {
+class _NavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -49,18 +51,15 @@ class _Pages extends StatelessWidget {
       // physics: BouncingScrollPhysics(), // Estilo para cuando ya no hay mas pages
       physics: NeverScrollableScrollPhysics(), // Inhabilitamos el cambiar de pages mediante swipe
       children: [
-        Container(
-          color: Colors.red,
-        ),
-        Container(
-          color: Colors.green
-        )
+        Tab1Page(),
+        Tab2Page(),
       ],
     );
   }
 }
 
-// ChangeNotifier: Nos permite notificar a todos los widgets que esten pendientes del valor
+// ChangeNotifier:
+// Mediante notifyListeners(), nos permite notificar a todos los widgets que esten pendientes del valor
 class _NavegacionModel with ChangeNotifier {
 
   int _currentPage = 0;
